@@ -1,4 +1,4 @@
-function sigVec = genSFMSig(dataX,timea,freq0,freq1,snr)
+function sigVec = genSFMSig(dataX,snr,timea,freq0,freq1)
  
 % TO DO
 % Generate a Step FM signal
@@ -18,14 +18,12 @@ function sigVec = genSFMSig(dataX,timea,freq0,freq1,snr)
 %Wendy Mendoza, January 2021
 
 
-phaseVec = 2*pi*freq0*timea; 
-sfmSig = 2*pi*freq1*(dataX-timea)+2*pi*timea);
-sigVec = sin(2*pi*freq0*timea); t <=; ta;
-sigVec = sin(2*pi*freq1*(dataX-timea)+2*pi*timea); t >; ta;
+% phaseVec = 2*pi*freq0*timea; 
+% sfmSig = 2*pi*freq1*(dataX-timea)+2*pi*timea;
+sigVec = sin(2*pi*freq0*dataX).*( dataX <= timea);
+sigVec = sigVec+ sin(2*pi*freq1*(dataX-timea)+2*pi*freq0*timea).*(dataX >= timea);
 
 
 sigVec = snr*sigVec/norm(sigVec);
-
-end 
 
  
