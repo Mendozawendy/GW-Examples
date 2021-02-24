@@ -5,7 +5,7 @@ ta = 5;
 f0 = 4;
 f1 = 4;
 A = 10;
-%  Instantaneous Frequency after 1s
+% Instantaneous Frequency after 1s
 MaxFreq = t1+2*ta2+f0+f1;
 samplFreq = 5*maxFreq;
 samplIntrvl = 1/samplFreq;
@@ -21,13 +21,13 @@ nSamples = length(timeVec);
 genPlotSig(5,argsvector)
 
 
-%Signal smapled at 4*maximum frequency
+% Signal smapled at 4*maximum frequency
 genPlotSig(4,argsVector)
 
 % Generate the Step FM signal
 sigVec = gensfmsig(timeVec,A,timea,freq0,freq1);
 
-%Plot the signal
+% Plot the signal
 subplot(1,5,4);
 figure;
 plot(timeVec,sigVec,'Marker','.','MarkerSize',24);
@@ -35,11 +35,11 @@ title('Step FM Signal')
 xlabel('Magnitude')
 ylabel('Time Sample')
 
-%Plot the periodogram
+% Plot the periodogram
 %--------------
-%Length of data 
+% Length of data 
 dataLen = timeVec(end)-timeVec(1);
-%DFT sample corresponding to Nyquist frequency
+% DFT sample corresponding to Nyquist frequency
 kNyq = floor(nSamples/2)+1;
 % Positive Fourier frequencies
 posFreq = (0:(kNyq-1))*(1/dataLen);
@@ -77,4 +77,27 @@ b = fir1(filtordr, (2048/2) / (1024/2));
 
 %Apply filters
 filtSig = fftfilt(b,sigVec); 
+
+%Plot a spectrogram
+% With 0.09 window length , 0.08 s overlap, we can clearly see signal at
+% around 20 Hz - spread arounf this frequency due to the FM signal. 
+winLen = 0.09;%sec
+ovrlp = 0.08;%sec
+
+%Convert to integer number of samples 
+winLenSmpls = floor(winLen*samplFreq);
+ovrlpSmpls =  floor(ovrlp*samplFreq);
+[S,F,T]    =  spectrogram(sigVec,winLenSmpls,ovrlpSmpls,[],samplFreq);
+
+% Plot the spectrogram
+figure;
+imagesc(T,F,abs(S)); axis xy;
+title('Step FM Signal')
+xlabel('Time (sec)');
+ylabel('Frequency (Hz)');
+fs = 1000; 
+t = 0:1/fs:2; 
+x = vco(sin(2*pi*t),[10 490],fs); 
+
+strips(x,0.25,fs);
 
